@@ -1,0 +1,107 @@
+# GMX Market Maker 配置文件
+# 复制为 config.yaml 并填入你的配置
+
+# 网络配置
+network:
+  chain: "arbitrum"  # arbitrum / avalanche
+  rpc_url: "https://arb1.arbitrum.io/rpc"  # 建议使用 Alchemy/Infura
+  # rpc_url: "https://your-alchemy-url.com/v2/YOUR_API_KEY"
+
+# 钱包配置 (敏感信息建议使用环境变量)
+wallet:
+  # 私钥通过环境变量 PRIVATE_KEY 设置
+  address: ""  # 你的钱包地址
+
+# 策略配置
+strategy:
+  # 策略类型: high_yield / balanced / conservative
+  type: "balanced"
+
+  # APY 阈值
+  min_apy: 10.0  # 最低 APY (%)，低于此值不进入
+  target_apy: 20.0  # 目标 APY (%)
+
+  # 仓位分配
+  max_single_pool_pct: 30.0  # 单池最大占比 (%)
+  min_pools: 2  # 最少分散到几个池
+  max_pools: 5  # 最多分散到几个池
+
+  # 再平衡
+  rebalance_threshold: 5.0  # 偏差超过此值触发再平衡 (%)
+  rebalance_interval: 86400  # 最小再平衡间隔 (秒)
+
+# 风控配置
+risk:
+  # 仓位限制
+  max_position_usd: 10000  # 总仓位上限 (USD)
+  min_position_usd: 100  # 单池最小仓位 (USD)
+
+  # 止损
+  max_drawdown_pct: 10.0  # 最大回撤 (%)
+  stop_loss_pct: 15.0  # 止损线 (%)
+
+  # 多空平衡要求
+  max_oi_imbalance: 0.3  # OI 失衡容忍度 (0-1)
+
+# 池子筛选
+pools:
+  # 白名单 (只投这些池)
+  whitelist:
+    - "ETH-USDC"
+    - "BTC-USDC"
+    - "ARB-USDC"
+
+  # 黑名单 (永不投这些池)
+  blacklist:
+    - "DOGE-USDC"
+    - "SHIB-USDC"
+    - "PEPE-USDC"
+
+  # 如果白名单为空，则使用以下过滤条件
+  filters:
+    min_tvl: 1000000  # 最小 TVL (USD)
+    min_volume_24h: 100000  # 最小 24h 交易量 (USD)
+
+# 执行配置
+execution:
+  check_interval: 300  # 检查间隔 (秒)
+  gas_price_max_gwei: 50  # 最大 Gas Price (gwei)
+  slippage_tolerance: 0.5  # 滑点容忍度 (%)
+
+  # 执行时间窗口 (UTC)
+  active_hours:
+    start: 0  # 0点开始
+    end: 24   # 24点结束 (全天)
+
+# 通知配置
+notifications:
+  # Telegram
+  telegram:
+    enabled: false
+    bot_token: ""  # 通过环境变量 TELEGRAM_BOT_TOKEN 设置
+    chat_id: ""    # 通过环境变量 TELEGRAM_CHAT_ID 设置
+
+  # 通知触发条件
+  alerts:
+    on_trade: true  # 交易执行时通知
+    on_error: true  # 错误时通知
+    daily_report: true  # 每日报告
+    apy_change_threshold: 5.0  # APY 变化超过此值时通知 (%)
+
+# 日志配置
+logging:
+  level: "INFO"  # DEBUG / INFO / WARNING / ERROR
+  file: "logs/gmx_mm.log"
+  max_size_mb: 10
+  backup_count: 5
+
+# 数据库配置
+database:
+  type: "sqlite"  # sqlite / postgresql
+  path: "data/gmx_mm.db"
+  # postgresql 配置 (如果使用)
+  # host: "localhost"
+  # port: 5432
+  # name: "gmx_mm"
+  # user: ""
+  # password: ""  # 通过环境变量设置
