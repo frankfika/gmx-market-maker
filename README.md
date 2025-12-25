@@ -54,7 +54,7 @@
 
 ```bash
 # 克隆项目
-git clone https://github.com/your-username/gmx-market-maker.git
+git clone https://github.com/frankfika/gmx-market-maker.git
 cd gmx-market-maker
 
 # 创建虚拟环境
